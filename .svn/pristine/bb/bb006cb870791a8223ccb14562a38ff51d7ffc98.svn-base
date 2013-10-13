@@ -1,0 +1,112 @@
+/**
+ * Author: Shantnu Aggarwal<shantnuaggarwal@gmail.com>
+ * Date: 10/11/13
+ * Time: 4:20 PM
+ */
+define(["jquery","underscore","backbone","jquerymobile","text!templates/createMeme.html"],function($,_,Backbone, jqM, CreateMemeTemplate){
+    var CreateMemeView, canvas, context, imageLoader;
+    CreateMemeView = Backbone.View.extend({
+        el:'#posts',
+        render: function(){
+            $(this.el).html('');
+            $(this.el).append(_.template(CreateMemeTemplate, {}));
+            $('#generateMeme').bind('click', this.handleImage);
+            $('#clearMeme').bind('click', this.clearImage);
+            this.loadLastMeme(document.getElementById('memeCanvas'));
+            $(this.el).trigger('create');
+        },
+        clearImage: function(){
+            if(!this.canvas)canvas = document.getElementById('memeCanvas');
+            if(!this.context)context = canvas.getContext('2d');
+            context.clearRect(0,0,canvas.width,canvas.height);
+            Backbone.storage.clearValLocal('generatedMeme');
+        },
+        loadLastMeme: function(c){
+            if (Backbone.storage.getValLocal('generatedMeme')== 'null') return;
+            var img = new Image();
+            img.onload = function() {
+                var ctx=c.getContext("2d");
+                c.width = 460;
+                c.height = img.height * (460/img.width);
+                ctx.drawImage(img, 0, 0, 460, img.height * (460/img.width));
+            };
+            img.src = Backbone.storage.getValLocal('generatedMeme');
+        },
+        handleImage: function(){
+            imageLoader = document.getElementById('imageLoader');
+            canvas = document.getElementById('memeCanvas');
+            context = canvas.getContext('2d');
+            var topText = $('#topLine').val();
+            var bottomText = $('#bottomLine').val();
+            var writeText = function(text, topOrBottom, y) {
+                topOrBottom = topOrBottom || 'top';
+                var fontSize = (canvas.height / 8);
+                var x = canvas.width / 2;
+                if (typeof y === 'undefined') {
+                    y = fontSize;
+                    if (topOrBottom === 'bottom')
+                        y = canvas.height - 10;
+                }
+                // Should we split it into multiple lines?
+                if (context.measureText(text).width > (canvas.width * 1.1)) {
+                    // Split word by word
+                    var words = text.split(' ');
+                    var wordsLength = words.length;
+                    // Start with the entire string, removing one word at a time. If
+                    // that removal lets us make a line, place the line and recurse with
+                    // the rest. Removes words from the back if placing at the top;
+                    // removes words at the front if placing at the bottom.
+                    if (topOrBottom === 'top') {
+                        var i = wordsLength;
+                        while (i --) {
+                            var justThis = words.slice(0, i).join(' ');
+                            if (context.measureText(justThis).width < (canvas.width * 1.0)) {
+                                writeText(justThis, topOrBottom, y);
+                                writeText(words.slice(i, wordsLength).join(' '), topOrBottom, y + fontSize);
+                                return;
+                            }
+                        }
+                    }
+                    else if (topOrBottom === 'bottom') {
+                        for (var i = 0; i < wordsLength; i ++) {
+                            var justThis = words.slice(i, wordsLength).join(' ');
+                            if (context.measureText(justThis).width < (canvas.width * 1.0)) {
+                                writeText(justThis, topOrBottom, y);
+                                writeText(words.slice(0, i).join(' '), topOrBottom, y - fontSize);
+                                return;
+                            }
+                        }
+                    }
+                }
+                // Draw!
+                context.fillText(text, x, y, canvas.width * .9);
+                context.strokeText(text, x, y, canvas.width * .9);
+            };
+            var reader = new FileReader();
+            reader.onload = function(event){
+                var img = new Image();
+                img.onload = function(){
+                    canvas.width = 460;
+                    canvas.height = img.height * (460/img.width);
+                    context.drawImage(img, 0, 0, 460, img.height * (460/img.width));
+                    // Set up text variables
+                    context.fillStyle = 'white';
+                    context.strokeStyle = 'black';
+                    context.lineWidth = 2;
+                    var fontSize = (canvas.height / 8);
+                    context.font = fontSize + 'px Impact';
+                    context.textAlign = 'center';
+                    // Draw them!
+                    writeText(topText, 'top');
+                    writeText(bottomText, 'bottom');
+                    // Get canvas contents as a data URL
+                    var imgAsDataURL = canvas.toDataURL();
+                    Backbone.storage.setValLocal('generatedMeme',imgAsDataURL);
+                }
+                img.src = event.target.result;
+            }
+            reader.readAsDataURL(imageLoader.files[0]);
+        }
+    });
+    return CreateMemeView;
+});

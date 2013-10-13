@@ -1,0 +1,10 @@
+<% if(userId){ %>
+<ul>
+    <li>
+        <h3><input id="uploadImage" type="file" placeholder="Upload a Meme"> </h3>
+    </li>
+    <li data-target="create"><a href="#create">Create a Meme</a></li>
+</ul>
+<% }else{ %>
+<p>You are missing all the good stuff! <a href="#login">Login Using Facebook</a> Now to Upload and Create Meme's.</p>
+<% }%>
