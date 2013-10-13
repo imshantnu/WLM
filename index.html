@@ -1,0 +1,26 @@
+<!DOCTYPE html> 
+<html>
+  <head>
+    <title>Beta Wanna Lol</title>
+    <link rel="stylesheet" href="style/jquery.mobile-1.3.2.css" />
+    <link rel="stylesheet" href="style/mobile.wannalol.css" />
+    <script data-main="js/app" src="js/vendor/require.js"></script>
+    <!-- maximum scale added to stop zoom on select controls-->
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, maximum-scale=1"/>
+  </head>
+  <body>
+    <div data-role="page">
+        <div data-role="panel" id="navigation-panel" data-position="left" data-display="push" data-dismissible="true">
+        </div>
+        <div data-role="panel" id="user-panel" data-position="right" data-display="push" data-dismissible="true">
+        </div>
+        <header data-role="header" data-position="fixed">
+            <a href="#navigation-panel" class="menu-button" data-role="none"><img src="style/images/menu-button.png"/></a>
+            <a href="#user-panel" data-position="right" class="menu-button" data-role="none"><img src="style/images/magnifier.png"/></a>
+        </header>
+        <div id="posts" data-role="content">
+        </div>
+        <div data-role="footer"></div>
+    </div>
+  </body>
+</html>

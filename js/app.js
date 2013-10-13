@@ -1,0 +1,54 @@
+/**
+ * Author: Shantnu Aggarwal<shantnuaggarwal@gmail.com>
+ * Date: 9/7/13
+ * Time: 12:28 PM
+ */
+
+// Require.js allows us to configure shortcut alias
+require.config( {
+    // 3rd party script alias names
+    paths: {
+        // Major libraries
+        jquery: 'vendor/jquery-min',
+        jquerymobile: 'vendor/jquery.mobile-1.3.2',
+        underscore: 'vendor/underscore-min',
+        backbone: 'vendor/backbone-min',
+        text: 'vendor/text',
+        postmodel: 'collections/postModel',
+        postscollection:'collections/posts',
+        templates:'../templates',
+        facebook: '//connect.facebook.net/en_US/all'
+    },
+    // Sets the configuration for your third party scripts that are not AMD compatible
+    shim: {
+        "backbone": {
+            "deps": [ "underscore", "jquery" ],
+            "exports": "Backbone"  //attaches "Backbone" to the window object
+        },
+        'facebook' : {
+            export: 'FB'
+        }
+    } // end Shim Configuration
+} );
+// Includes File Dependencies
+require([ "jquery", "backbone", "routers/mobileRouter"], function( $, Backbone, Mobile) {
+    $( document ).on( "mobileinit",
+        // Set up the "mobileinit" handler before requiring jQuery Mobile's module
+        function() {
+            // Prevents all anchor click handling including the addition of active button state and alternate link bluring.
+            $.mobile.linkBindingEnabled = false;
+            // Disabling this will prevent jQuery Mobile from handling hash changes
+            $.mobile.hashListeningEnabled = false;
+        }
+    );
+    require( [ 'views/navigation', 'views/userPanel',"jquerymobile" ], function(NavigationView, UserPanelView) {
+        window.baseUrl = 'http://beta.wannalol.com';
+        Backbone.emulateHTTP = true;
+        // Instantiates a new Backbone.js Mobile Router
+        var navigationView = new NavigationView();
+        navigationView.render();
+        var userPanelView = new UserPanelView();
+        userPanelView.render();
+        this.router = new Mobile();
+    });
+} );

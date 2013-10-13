@@ -1,0 +1,177 @@
+ul,li{
+    margin:0;
+    padding:0;
+}
+ul.posts{
+    margin-top: 0;
+    vertical-align: top;
+    display: inline-block;
+    width: 100%;
+    padding:0;
+}
+li{
+    list-style: none;
+    text-align: center;
+    margin:1em 5px;
+    padding:1em;
+    background: #ffffff;
+    border-radius: 1em;
+    border:none;
+}
+.ui-page .ui-header{
+    position: fixed;
+    overflow: visible;
+    background: none;
+    border: 0;
+}
+#posts {
+    background : transparent url(images/bright_squares.png) 0 0 repeat fixed !important;
+    background-size : cover;
+}
+.ui-header .logo, .ui-header .logo .ui-btn-inner{
+    background: none;
+    border:none;
+    border-radius: 0;
+    box-shadow: none;
+}
+header .ui-btn-corner-all {
+    /* border-radius: 0; /* Make the menu button squarish */
+}
+header ul ul { /* Menu Item List */
+    position: absolute; /* Position absolutely */
+    display: none; /* Hide */
+    z-index:500; /* Ensure visibility over other elements on page */
+    margin-top: 0px; /* Bring menu closer to button; not needed on mobile */
+}
+header ul li{
+    margin:0;
+    padding:0;
+    border-radius: 0;
+    background: transparent;
+    border: 0;
+}
+header ul ul li, header .ui-listview-inset .ui-li {
+    width: 150px; /* Fixed width menu items*/
+    display: block; /* JQM makes a inline-blocks... reset it to block */
+}
+header ul ul li a {
+    white-space: normal; /* Stop long menu names from truncating */
+}
+header ul:hover ul {
+    /* display: block; /* Display menu on hover over parent */
+}
+#menu-right {
+    float: right;
+    margin-right:0.5em;
+}
+#menu-right ul {
+    margin-right: 0.5em;
+    right: 0em;
+}
+.postImage{
+    width:100%;
+    display: block;
+}
+header .logo span{
+    padding:0;
+    margin-top:-10px;
+}
+header,
+.ui-page .ui-header{
+    display: inline-block;
+    height:62px;
+    border-radius: 0;
+    background-color: #000;
+    margin: 0;
+
+}
+.ui-header .ui-btn-left{
+    top:0;
+}
+.share{
+    text-align:right;
+}
+.share a{
+    display: inline-block;
+    width: 50px;
+    height: 40px;
+    margin-right:5px;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+.share a:last-child{
+    margin:0;
+}
+.fbShare{
+    background: #666666 url(images/icons.png) 0 -280px no-repeat;
+}
+.twitterShare{
+    background: #666666 url(images/icons.png) 0 -240px no-repeat;
+}
+.redditShare{
+    background: #666666 url(images/icons.png) 0 -160px no-repeat;
+}
+#navigation-panel,#user-panel{
+    background-color: #000;
+    position: fixed;
+    background-image: none;
+}
+#navigation-panel .ui-panel-inner,#user-panel .ui-panel-inner{
+    padding:0;
+}
+#navigation-panel li,#user-panel li{
+    margin: 0;
+    padding:0;
+    text-align: left;
+    border-radius: 0;
+    background: transparent;
+}
+#navigation-panel li.selected,#user-panel li.selected{
+   border-left: 5px solid #199dd4;
+   margin-left:0;
+}
+#navigation-panel li a, .ui-body-c .ui-link:visited, .ui-body-c .ui-link{
+    border-bottom: solid #333 1px;
+    box-shadow: 0 1px 0 #727272;
+    color: #fff;
+    font-size: 14px;
+    text-decoration: none;
+    width: 100%;
+    display: block;
+    padding: 10px 0px 10px 10px;
+    box-sizing: border-box;
+    text-shadow: 0px 1px 1px #000000;
+}
+.ui-content{
+    padding:0;
+}
+.error{
+    text-align: center;
+    font-size: 2em;
+    min-height: 50em;
+}
+#navigation-panel h3,#user-panel h3{
+    box-sizing: border-box;
+    font-size: 12px;
+    color: #fff;
+    margin: 0;
+    background-color: #000;
+    border-bottom: solid #3d3d3d 1px;
+}
+#navigation-panel h3 #search{
+    padding: 5px;
+    border-radius: 5px;
+    width: 98%;
+    box-sizing: border-box;
+    margin: 6px 4px;
+    background: transparent url(images/magnifier.png) no-repeat 95% center;
+}
+.memeForm{
+    text-align: center;
+    margin:1em 5px;
+    padding:1em;
+    background: #ffffff;
+    border-radius: 1em;
+    border:none;
+    min-height: 50em;
+}

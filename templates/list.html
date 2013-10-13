@@ -1,0 +1,24 @@
+<ul class="posts">
+<% _.each(posts, function (post) { %>
+
+  <li>
+      <article>
+          <h2><%- decodeURIComponent(post.get('postTitle').replace(/\+/g," ")) %></h2>
+          <img class="postImage" alt="<%= decodeURIComponent(post.get('postTitle').replace(/\+/g,' ')) %>" src="<%= post.get('imgUrl') %>" />
+          <div class="buttons">
+              <a class="like" data-url="<%= post.get('url') %>">Like</a>
+              <a class="dislike" data-url="<%= post.get('url') %>">Dislike</a>
+          </div>
+          <div class="share">
+              <a class="fbShare" href="#" data-url="<%= post.get('url') %>"></a>
+              <a class="twitterShare" href="#" data-title="<%- decodeURIComponent(post.get('postTitle').replace(/\+/g,' ')) %>" data-url="<%= post.get('url') %>"></a>
+              <a class="redditShare" href="#" data-url="<%= post.get('url') %>"></a>
+          </div>
+      </article>
+  </li>
+
+<% }); %>
+<% if(_.size(posts) == 5){ %>
+    <li><aside>We have an Add Here</aside></li>
+<% } %>
+</ul>

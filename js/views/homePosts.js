@@ -1,0 +1,105 @@
+/**
+ * Author: Shantnu Aggarwal<shantnuaggarwal@gmail.com>
+ * Date: 9/7/13
+ * Time: 8:06 PM
+ */
+define(["jquery","underscore","backbone","jquerymobile","text!../templates/list.html","text!../templates/error.html","postscollection", "postmodel"],function($,_,Backbone,jqM,ListsTemplate,ErrorTemplate,PostsCollection, PostModel){
+    var PostsView;
+    PostsView = Backbone.View.extend({
+        el: "#posts",
+        initialize: function () {
+            // isLoading is a useful flag to make sure we don't send off more than
+            // one request at a time
+            this.isLoading = false;
+            this.postsCollection = new PostsCollection();
+        },
+        render: function () {
+            $(this.el).html('');
+            this.loadResults();
+        },
+        loadResults: function () {
+            this.postsCollection.method = Backbone.storage.getVal('postType');
+            // we are starting a new load of results so set isLoading to true
+            this.isLoading = true;
+            var that = this;
+            this.postsCollection.fetch({
+                error: function (model, xhr, options) {
+                    $(window).off('scroll');
+                    $(that.el).html(_.template(ErrorTemplate, {}));
+                },
+                success: function (posts) {
+                    // Once the results are returned lets populate our template
+                    $(that.el).append(_.template(ListsTemplate, {posts: posts.models, _: _}));
+                    // Now we have finished loading set isLoading back to false
+                    that.postsCollection.lastPostId = posts.models.pop().attributes.postID;
+                    that.isLoading = false;
+                    $(window).scroll(function(){
+                        that.checkScroll();
+                    });
+                }
+            });
+        },
+        // This will simply listen for scroll events on the current el
+        events: {
+            'click .share a': 'socialShare',
+            'click .buttons a.like': 'like',
+            'click .buttons a.dislike': 'dislike'
+        },
+        checkScroll: function () {
+            var triggerPoint = 0.95; // 95% page scrolled
+            if (!this.isLoading && ($(window).scrollTop() > 1 && (($(window).scrollTop() + $(window).height()) / $(document).height()) > triggerPoint)) {
+                this.loadResults();
+            }
+        },
+        like: function(e){
+            var that = this;
+            e.preventDefault();
+            var anchor = e.target;
+            var postId = anchor.getAttribute('data-url');
+            var postModel = new PostModel();
+            postModel.set({id:postId});
+            postModel.like();
+        },
+        dislike: function(e){
+            var that = this;
+            e.preventDefault();
+            var anchor = e.target;
+            var postId = anchor.getAttribute('data-url');
+            var postModel = new PostModel();
+            postModel.set({id:postId});
+            postModel.dislike();
+        },
+        socialShare: function(e){
+            var that = this;
+            e.preventDefault();
+            var anchor = e.target;
+            var postId = anchor.getAttribute('data-url');
+            var url = this.getPostWebUrl(postId);
+            var postModel = new PostModel();
+            postModel.set({id:postId});
+            postModel.share();
+            switch(anchor.getAttribute('class')){
+                case 'fbShare':
+                    window.open(
+                        'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(url),
+                        'facebook-share-dialog',
+                        'width=626,height=436');
+                    break;
+                case 'twitterShare':
+                    window.open('https://twitter.com/intent/tweet?text='+anchor.getAttribute('data-title')+'&original_referer='+encodeURIComponent(url)+'&source=tweetbutton&url='+encodeURIComponent(url), 'Mobile-Twitter-Share',
+                    'width=626,height=436');
+                    break;
+                case 'redditShare':
+                    window.open(
+                        'http://www.reddit.com/submit?url=' + encodeURIComponent(url),
+                        'reddit-share-dialog',
+                        'width=626,height=436');
+                    break;
+            }
+        },
+        getPostWebUrl: function(pid){
+            return 'http://www.wannalol.com/p/'+pid;
+        }
+    });
+    return PostsView;
+});
